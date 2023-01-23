@@ -1,0 +1,122 @@
+#  Задача: Создать телефонный справочник с возможностью импорта и экспорта данных в нескольких форматах.
+#  Возможности: импорт данных, экспорт данных, поиск контакта.
+
+
+#  Контроллер:
+
+from import_data import import_data
+from export_data import export_data
+from print_data import print_data
+from search_data import search_data
+
+def greeting():
+    print("Добро пожаловать!")
+
+def input_data():
+    last_name = input("Введите фамилию: ")
+    first_name = input("Введите имя: ")
+    middle_name = input("Введите отчество: ")
+    brith_name = input("Введите дату рождения: ")
+    phone_number = input("Введите номер контакта: ")
+    note = input("Введите категорию контакта: ")
+    return [last_name, first_name, middle_name, brith_name, phone_number, note]
+
+def choice_sep():
+    sep = input("Введите разделитель: ")
+    if sep == "":
+        sep = None
+    return sep
+
+def choice_todo():
+    print("Доступные операции с телефонной книгой:\n\
+    1 - импорт;\n\
+    2 - экспорт;\n\
+    3 - поиск контакта.")
+    ch = input("Введите цифру: ")
+    if ch == '1':
+        sep = choice_sep()
+        import_data(input_data(), sep)
+    elif ch == '2':
+        data = export_data()
+        print_data(data)
+    else:
+        word = input("Введите данные для поиска: ")
+        data = export_data()
+        item = search_data(word, data)
+        if item != None:
+            print("Фамилия".center(20), "Имя".center(20), "Отчество".center(20), "Дата рождения".center(20), "Телефон".center(15), "Категория".center(30))
+            print("-"*130)
+            print(item[0].center(20), item[1].center(20), item[2].center(20), item[3].center(20), item[4].center(15), item[5].center(30))
+        else:
+            print("Данные не обнаружены")
+
+ # экспорт данных: 
+
+def export_data():
+    with open('phone.csv', 'r') as file:
+        data = []
+        t = []
+        for line in file:
+            if ',' in line:
+                temp = line.strip().split(',')
+                data.append(temp)
+            elif ';' in line:
+                temp = line.strip().split(';')
+                data.append(temp)
+            elif ':' in line:
+                temp = line.strip().split(':')
+                data.append(temp)        
+            elif line != '':
+                if line != '\n':
+                    t.append(line.strip())
+                else:
+                    data.append(t)
+                    t= []
+    return data
+
+
+#  импорт данных: 
+
+def import_data(data, sep=None):
+    with open('phone.csv', 'a+') as file:
+        if sep == None:
+            for i in data:
+                file.write(f"{i}\n")
+            file.write(f"\n")
+        else:
+            file.write(sep.join(data))
+            file.write(f"\n")
+
+
+
+# главная:
+
+ from controller import *
+
+greeting()
+
+choice_todo()
+
+# печать:
+
+def print_data(data):
+    if len(data) > 0:
+        print("Фамилия".center(20), "Имя".center(20), "Отчество".center(20), "Дата рождения".center(20), "Телефон".center(15), "Категория".center(30))
+        print("-"*130)
+        for item in data:
+            print(item[0].center(20), item[1].center(20), item[2].center(20), item[3].center(20), item[4].center(15), item[5].center(30))
+    else:
+        print("Справочник пуст!")
+
+# поиск контакта, ищем:
+
+from export_data import export_data
+from print_data import print_data
+
+def search_data(word, data):
+    if len(data) > 0:
+        for item in data:
+            if word in item:
+                return item
+    else:
+        return None
