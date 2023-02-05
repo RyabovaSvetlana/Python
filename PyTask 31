@@ -1,0 +1,90 @@
+Создать информационную систему позволяющую работать с сотрудниками студентами вуза или школьника. 
+ 
+# Инфо по кабинетам:
+
+import pandas as pd
+
+print('----'*30)
+print('Информация о классах')
+
+class_card = {
+        'Предмет': ['Русский язык','Химия','Физика','Биология','Информатика'],
+        'Номер парты' : ['1','2','3','4','5'],
+        'Ряд': ['Первый ряд','Второй ряд','Третий ряд','Четвертый ряд','Пятый ряд'],
+        'Вид парты' : ['Одноместная','Одноместная','Двуместная ','Двуместная ','Одноместная'],
+        'ID' : ['01','02','03','04','05']
+}
+    
+cc = pd.DataFrame(data = class_card)
+
+with open('cabinet.csv', 'a', encoding='UTF-8') as cl:
+        cl.write(f'{cc}')
+        cl.write('\n')
+    
+print(cc)
+ 
+# Модуль 1.
+
+import student_info as si
+import cabinet_info as cab
+
+
+def option():
+    print("\nПривет")
+    ch = int(input('Введите что хотите сделать: \n \
+    1: Поиск ID студента по фамилии \n \
+    2: Посмотреть класс и место студента \n \
+    3: Выход\n \
+    Ваш выбор: '))
+
+    if ch == 1:
+        Surn = str(input("Введите фамилию студента: "))
+        if Surn in si.stud_card['Фамилия']:
+            index = si.stud_card['Фамилия'].index(Surn)
+        print(f"{si.stud_card['ID'][index]}, {si.stud_card['Имя'][index]},{si.stud_card['Фамилия'][index]}\n,{si.stud_card['Дата рождения'][index]}, {si.stud_card['Успеваемость'][index]}")
+        print('\nХотите выполнить другую операцию??? Y или N: ')
+        num = input()
+        if num == 'Y' or 'y' or 'У' or 'у':
+            option()
+        exit()
+
+    elif ch == 2:
+        c = input('Введите ID студента для вывода по классам: ')
+        if c in cab.class_card['ID']:
+            index = cab.class_card['ID'].index(c)
+            print(f" Сидит в классе - {cab.class_card['Предмет'][index]}\n\, за партой номер - {cab.class_card['Номер парты'][index]}, это {cab.class_card['Ряд'][index]}, парта - {cab.class_card['Вид парты'][index]}, Имя: {si.stud_card['Имя'][index]}, Фамилия - {si.stud_card['Фамилия'][index]}, и успеваемасть у студента: {si.stud_card['Успеваемость'][index]}")
+            print('\nХотите выполнить другую операцию??? Y или N: ')
+            num = input()
+            if num == 'Y' or 'y' or 'У' or 'у':
+                option()
+            exit()
+    else:
+        print('еще раз')
+    exit()
+
+
+option()
+
+
+Карточка ученика:
+import pandas as pd
+
+print('----'*30)
+print('Табель ученика # 1285')
+
+stud_card = {
+        'ID': ['01','02','03','04','05'],
+        'Имя' : ['Иван','Сергей','Екатерина','Ольга','Мария'],
+        'Фамилия': ['Петров','Бойко','Литовченко','Мессинг','Пастернак'],
+        'Дата рождения' : ['17.08.2000','04.05.2001','01.04.1999','23.02.2002','08.03.2004'],
+        'Успеваемость' : ['Отличник','Троечник','Хорошист','Отличник','Хорошист']
+}
+    
+sc = pd.DataFrame(data = stud_card)
+
+with open('students.csv', 'a', encoding='UTF-8') as cl:
+        cl.write(f'{sc}')
+        cl.write('\n')
+    
+print(sc)
+
